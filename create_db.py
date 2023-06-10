@@ -2,9 +2,9 @@ from psycopg2 import connect, OperationalError
 from psycopg2.errors import DuplicateDatabase, DuplicateTable
 
 
-def connect_db(command):
+def connect_db(command, user="postgres", password="coderslab", host="localhost", db=""):
     try:
-        cnx = connect(user="postgres", password="coderslab", host="localhost")
+        cnx = connect(user=user, password=password, host=host, database=db)
         cnx.autocommit = True
         cursor = cnx.cursor()
         cursor.execute(command)
@@ -12,25 +12,22 @@ def connect_db(command):
         cnx.close()
     except OperationalError as error:
         print(f"An error occured: {error}")
-    return None
 
 
 def create_db(cmd):
     try:
-        connect_db(cmd)
+        connect_db(cmd, db="msg_workshop")
         print("Database created!")
     except DuplicateDatabase:
         print("Database already exist!")
-    return None
 
 
 def create_tbl(cmd):
     try:
-        connect_db(cmd)
+        connect_db(cmd, db="msg_workshop")
         print("Table created!")
     except DuplicateTable:
         print("Table already exist!")
-    return None
 
 
 sql_cmd = "CREATE DATABASE msg_workshop;"
